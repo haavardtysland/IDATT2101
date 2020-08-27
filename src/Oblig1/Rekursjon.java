@@ -1,6 +1,5 @@
 package Oblig1;
 
-import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.function.BiFunction;
 
@@ -25,7 +24,7 @@ public class Rekursjon {
         testTid( 1.001, 2000, Rekursjon::oppgave2);
         testTid(1.001, 5000,Rekursjon::oppgave2);
 
-        System.out.println("Math.pow tid: ");
+        System.out.println("Math sin pow-metodes tid: ");
         testTid(1.001, 100,Rekursjon::javaMath);
         testTid(1.001,1000, Rekursjon::javaMath);
         testTid( 1.001, 2000, Rekursjon::javaMath);
