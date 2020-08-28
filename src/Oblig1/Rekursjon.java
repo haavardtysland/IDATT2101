@@ -1,4 +1,4 @@
-package Oblig1;
+//package Oblig1;
 
 import java.util.Date;
 import java.util.function.BiFunction;
