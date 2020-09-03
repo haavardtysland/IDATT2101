@@ -1,4 +1,4 @@
-package Oblig1;
+//package Oblig1;
 
 import java.util.Date;
 import java.util.function.BiFunction;
@@ -19,16 +19,16 @@ public class Rekursjon {
         testTid(1.001, 10000,Rekursjon::oppgave1);
 
         System.out.println("Oppgave 2 tid: ");
-        testTid(1.001, 100,Rekursjon::oppgave2);
-        testTid(1.001,1000, Rekursjon::oppgave2);
-        testTid(1.001, 10000, Rekursjon::oppgave2);
-        testTid(1.001, 100000,Rekursjon::oppgave2);
+        testTid(1.001, 10,Rekursjon::oppgave2);
+        testTid(1.001,100, Rekursjon::oppgave2);
+        testTid(1.001, 1000, Rekursjon::oppgave2);
+        testTid(1.001, 10000,Rekursjon::oppgave2);
 
         System.out.println("Math sin pow-metodes tid: ");
-        testTid(1.001, 1000,Rekursjon::javaMath);
-        testTid(1.001,2000, Rekursjon::javaMath);
-        testTid(1.001, 4000, Rekursjon::javaMath);
-        testTid(1.001, 8000,Rekursjon::javaMath);
+        testTid(1.001, 10,Rekursjon::javaMath);
+        testTid(1.001,100, Rekursjon::javaMath);
+        testTid(1.001, 1000, Rekursjon::javaMath);
+        testTid(1.001, 10000,Rekursjon::javaMath);
 
     }
 
@@ -55,10 +55,8 @@ public class Rekursjon {
         else if(n%2 == 1) {
             return x * oppgave2(x*x, (n-1)/2);
         }
-        else if (n%2 == 0) {
+        else {
             return oppgave2(x*x, n/2);
-        } else {
-            return 0;
         }
     }
 
