@@ -42,7 +42,7 @@ public class Rekursjon {
         if (n == 0) {
             return 1;
         }
-        return x * oppgave1(x, n-1);
+        return x * oppgave1(x, n-1); 
     }
 
     private static double oppgave2(double x, int n) {
