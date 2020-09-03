@@ -9,8 +9,8 @@ public class Sortering {
 
     public static void main(String[] args) {
 
-        int[] random = randomArray(10000);
-        int[] random2 = randomArray(10000);
+        int[] random = randomArray(100000000);
+        int[] random2 = randomArray(100000000);
         System.out.println("RANDOM TABELL");
         System.out.println("Før sortering sum 1: " +sjekkSum(random));
         System.out.println("Før sortering rekkefølge 1: " + rekkefolgeTest(random));
@@ -25,8 +25,8 @@ public class Sortering {
 
 
         System.out.println("\r\nDUPlIKAT TABELL");
-        int[] duplikat = duplikatArray(1, 3, 10000);
-        int[] duplikat2 = duplikatArray(1, 3, 10000);
+        int[] duplikat = duplikatArray(1, 3, 100000000);
+        int[] duplikat2 = duplikatArray(1, 3, 100000000);
         System.out.println("Før sortering sum 1: " +sjekkSum(duplikat));
         System.out.println("Før sortering rekkefølge 1: " + rekkefolgeTest(duplikat));
         System.out.println("Før sortering sum 2: " +sjekkSum(duplikat2));

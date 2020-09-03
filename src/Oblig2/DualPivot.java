@@ -28,7 +28,7 @@ public class DualPivot {
 
     static int[] partition(int[] arr, int low, int high)
     {
-        if (arr[low] > arr[high])
+        if ( arr[low] > arr[high])
             swap(arr, low, high);
 
         // p is the left pivot, and q
