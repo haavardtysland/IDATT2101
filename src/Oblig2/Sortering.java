@@ -1,4 +1,4 @@
-//package Oblig2;
+package Oblig2;
 
 import java.util.Date;
 import java.util.Random;
