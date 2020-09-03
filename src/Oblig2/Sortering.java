@@ -1,9 +1,7 @@
-package Oblig2;
+//package Oblig2;
 
-import java.lang.reflect.Array;
 import java.util.Date;
 import java.util.Random;
-import java.util.function.BiFunction;
 
 public class Sortering {
 
@@ -64,7 +62,7 @@ public class Sortering {
         return sum;
     }
 
-    //sjekker at rekkefølgen er riktig frem til alle utenom det siste elementet i tabellen
+    //sjekker at rekkefølgen er riktig frem til alle utenom det siste elementet i tabellen, går da utifra at hvis alle de tidligere elementene er sortert, er også det siste det
     public static boolean rekkefolgeTest(int[] array) {
         for(int i = 0; i < array.length-2; i++) {
             if(array[i+1] < array[i]) {
