@@ -1,21 +1,28 @@
 package Oblig2;
 
+import java.lang.reflect.Array;
+import java.util.Date;
 import java.util.Random;
+import java.util.function.BiFunction;
 
 public class Sortering {
 
     public static void main(String[] args) {
-        int[] random = randomArray(50);
-        SinglePivot singlePivot = new SinglePivot();
+        /*int[] random = randomArray(100000000);
+        System.out.println("Random tabell:");
         System.out.println("Før sortering sum: " +sjekkSum(random));
         System.out.println("Før sortering rekkefølge: " + rekkefolgeTest(random));
-        singlePivot.quicksort(random, 0 , random.length - 1);
+        testTidSinglePivot(random, 0, random.length - 1);
+        System.out.println("Etter sortering sum: " + sjekkSum(random));
+        System.out.println("Etter sortering rekkefølge: " + rekkefolgeTest(random));*/
+
+        int[] random = randomArray(10000000);
+        System.out.println("Før sortering sum: " +sjekkSum(random));
+        System.out.println("Før sortering rekkefølge: " + rekkefolgeTest(random));
+        testTidDualPivot(random, 0, random.length -1);
         System.out.println("Etter sortering sum: " + sjekkSum(random));
         System.out.println("Etter sortering rekkefølge: " + rekkefolgeTest(random));
 
-        for (int x : random) {
-            System.out.println(x);
-        }
     }
 
     //sjekker summen av en array
@@ -44,5 +51,35 @@ public class Sortering {
             array[i] = random.nextInt();
         }
         return array;
+    }
+
+    private static void testTidSinglePivot(int[] array, int v, int h) {
+        SinglePivot singlePivot = new SinglePivot();
+        Date start = new Date();
+        int runder = 0;
+        double tid;
+        Date slutt;
+        do {
+            singlePivot.quicksort(array, v, h);
+            slutt = new Date();
+            ++runder;
+        } while (slutt.getTime() - start.getTime() < 1000);
+        tid = (double)(slutt.getTime() - start.getTime()) / runder;
+        System.out.println("Tid: " + tid);
+    }
+
+    private static void testTidDualPivot(int[] array, int v, int h) {
+        DualPivot dualPivot = new DualPivot();
+        Date start = new Date();
+        int runder = 0;
+        double tid;
+        Date slutt;
+        do {
+            dualPivot.quicksort(array, v, h);
+            slutt = new Date();
+            ++runder;
+        } while (slutt.getTime() - start.getTime() < 1000);
+        tid = (double)(slutt.getTime() - start.getTime()) / runder;
+        System.out.println("Tid: " + tid);
     }
 }
