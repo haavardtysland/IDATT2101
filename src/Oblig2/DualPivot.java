@@ -9,8 +9,7 @@ public class DualPivot {
         arr[j] = temp;
     }
 
-    static void quicksort(int[] arr,
-                                   int low, int high)
+    static void quicksort(int[] arr, int low, int high)
     {
         if (low < high)
         {
