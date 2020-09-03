@@ -1,13 +1,15 @@
 package Oblig2;
 
+import java.util.Random;
+
 public class Sortering {
 
     public static void main(String[] args) {
-        int[] random = new int[]{1, 6, 4, 8, 3, 2};
+        int[] random = randomArray(50);
         SinglePivot singlePivot = new SinglePivot();
         System.out.println("Før sortering sum: " +sjekkSum(random));
         System.out.println("Før sortering rekkefølge: " + rekkefolgeTest(random));
-        singlePivot.quicksort(random, random[0], random.length - 1);
+        singlePivot.quicksort(random, 0 , random.length - 1);
         System.out.println("Etter sortering sum: " + sjekkSum(random));
         System.out.println("Etter sortering rekkefølge: " + rekkefolgeTest(random));
 
@@ -33,5 +35,14 @@ public class Sortering {
             }
         }
         return true;
+    }
+
+    public static int[] randomArray(int length) {
+        Random random = new Random();
+        int[] array = new int[length];
+        for(int i = 0; i < array.length; i++) {
+            array[i] = random.nextInt();
+        }
+        return array;
     }
 }
