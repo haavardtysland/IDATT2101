@@ -1,6 +1,6 @@
 package Oblig3;
 
-//Var usikker på hvordan jeg skulle løse problemet med å få -te
+//Var usikker på hvordan jeg skulle løse problemet med å få -på subtraksjonoppgaven, dermed skrive den ut positiv foran hvis svaret er positivt og negativ foran hvis svaret er -0
 import java.math.BigInteger;
 
 public class Oppgave1 {
