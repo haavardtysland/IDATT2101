@@ -2,17 +2,17 @@ package Oblig3;
 
 public class Node {
 
-    double element;
+    int element;
     Node neste;
     Node forrige;
 
-    public Node(double e, Node n, Node f) {
+    public Node(int e, Node n, Node f) {
         element = e;
         neste = n;
         forrige = f;
     }
 
-    public double finnElement() {
+    public int finnElement() {
         return element;
     }
 

@@ -17,14 +17,14 @@ public class LenketListe {
         return hale;
     }
 
-    public void settInnFremst(double verdi) {
+    public void settInnFremst(int verdi) {
         hode = new Node(verdi, hode, null);
         if(hale == null) hale = hode;
         else hode.neste.forrige = hode;
         ++antElementer;
     }
 
-    public void settInnBakerst(double verdi) {
+    public void settInnBakerst(int verdi) {
         Node ny = new Node(verdi, null, hale);
         if(hale != null) hale.neste = ny;
         else hode = ny;

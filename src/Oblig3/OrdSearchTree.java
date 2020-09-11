@@ -1,6 +1,5 @@
 package Oblig3;
 
-import javax.lang.model.element.Element;
 import java.util.LinkedList;
 
 public class OrdSearchTree {

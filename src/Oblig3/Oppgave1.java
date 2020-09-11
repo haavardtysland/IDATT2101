@@ -1,6 +1,5 @@
 package Oblig3;
 
-//Var usikker på hvordan jeg skulle løse problemet med å få -på subtraksjonoppgaven, dermed skrive den ut positiv foran hvis svaret er positivt og negativ foran hvis svaret er -0
 import java.math.BigInteger;
 
 public class Oppgave1 {
@@ -16,9 +15,9 @@ public class Oppgave1 {
         System.out.println(a.add(b));
 
         System.out.println("Lenket liste subtraksjon: ");
-        LenketListe resultatSub = subtraksjon(b, a);
+        LenketListe resultatSub = subtraksjon(a, b);
         resultatSub.printListe(resultatSub.finnHode());
-        System.out.println(b.subtract(a));
+        System.out.println(a.subtract(b));
 
 
     }
@@ -29,8 +28,8 @@ public class Oppgave1 {
         LenketListe nyListe = new LenketListe();
         Node denne1 = liste1.finnHale();
         Node denne2 = liste2.finnHale();
-        double num; //verdien som skal legges inn i listen
-        double temp = 0; //en verdi for å finne det 2. sifferet hvis verdien blir større enn 9
+        int num; //verdien som skal legges inn i listen
+        int temp = 0; //en verdi for å finne det 2. sifferet hvis verdien blir større enn 9
         while (denne1 != null || denne2 != null) {
             if(denne1 != null && denne2 != null) { //hvis de er like lange
                 num = denne1.finnElement() + denne2.finnElement() + temp;
@@ -67,8 +66,9 @@ public class Oppgave1 {
         LenketListe nyListe = new LenketListe();
         Node denne1 = liste1.finnHale();
         Node denne2 = liste2.finnHale();
-        double num; //verdien som skal legges inn i listen
-        double temp = 0; //en verdi for hvis et tall blir mindre enn 0, for å fjerne fra tallet foran
+        int num; //verdien som skal legges inn i listen
+        int temp = 0; //en verdi for hvis et tall blir mindre enn 0, for å fjerne fra tallet foran
+        int fortegn = 1;
         while (denne1 != null || denne2 != null) {
             if (denne1 != null && denne2 != null) { //hvis de er like lange
                 if(liste1.finnAntall() > liste2.finnAntall()) {
@@ -94,13 +94,12 @@ public class Oppgave1 {
                 num = denne2.finnElement();
                 denne2 = denne2.finnForrige();
                 temp = 0;
+                if(denne2 == null) {
+                    fortegn = -1;
+                    num = num*fortegn;
+                }
                 nyListe.settInnFremst(num);
             }
-        }
-        if(liste1.finnAntall() > liste2.finnAntall()) {
-            System.out.println("Positiv");
-        } else {
-            System.out.println("Negativ");
         }
         return nyListe;
     }
