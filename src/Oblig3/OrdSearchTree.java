@@ -38,7 +38,7 @@ public class OrdSearchTree {
         while(i++ < height && !finished) {
             //To print out the spaces.
             for(int j=0; j < height-i; j++) {
-                System.out.print("   ");
+                System.out.print("    ");
             }
             int nodeCount = queue.size();
             if(nodeCount == 0)
@@ -47,7 +47,7 @@ public class OrdSearchTree {
             while(nodeCount > 0) {
                 //To retrieve but not remove the first element in the list.
                 OrdNode node = queue.peek();
-                System.out.print(node.nokkel + " ");
+                System.out.print(node.nokkel + "  ");
                 queue.remove();
                 if(node.venstre != null)
                     queue.add(node.venstre);
