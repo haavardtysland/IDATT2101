@@ -28,41 +28,39 @@ public class OrdSearchTree {
         rot = leggTil(rot, key);
     }
 
-    private void printTreFormat(OrdNode rot) {
-        if (rot == null) return;
-
-        LinkedList<OrdNode> queue = new LinkedList<>();
-        queue.add(rot);
-
-        int hoyde = finnHoyde(rot);
+    private void printTreeFormat(OrdNode root) {
+        if(root == null) return;
+        LinkedList<OrdNode> queue = new LinkedList<OrdNode>();
+        queue.add(root);
+        int height = finnHoyde(root);
         boolean finished = false;
         int i = 0;
-
-        while(i++ < hoyde && !finished) {
-            //For å skirve ut mellomrom
-            for(int j=0; j < hoyde-i; j++) {
-                System.out.println("   ");
+        while(i++ < height && !finished) {
+            //To print out the spaces.
+            for(int j=0; j < height-i; j++) {
+                System.out.print("   ");
             }
             int nodeCount = queue.size();
-            if(nodeCount == 0) finished = true;
-
+            if(nodeCount == 0)
+                finished = true;
+            //Nodes from the current level is removed and nodes for the next level is added in the queue.
             while(nodeCount > 0) {
+                //To retrieve but not remove the first element in the list.
                 OrdNode node = queue.peek();
-                System.out.println(node.nokkel + " ");
+                System.out.print(node.nokkel + " ");
                 queue.remove();
-                if(node.venstre != null) queue.add(node.venstre);
-                if(node.hoyre != null) queue.add(node.hoyre);
+                if(node.venstre != null)
+                    queue.add(node.venstre);
+                if(node.hoyre != null)
+                    queue.add(node.hoyre);
                 nodeCount--;
             }
-
             System.out.println();
         }
     }
-
-    public void printTreFormat() {
-        printTreFormat(rot);
+    public void printTreeFormat() {
+        printTreeFormat(rot);
     }
-
     private int finnHoyde(OrdNode rot) {
         if(rot != null) {
             return 1 + Math.max(finnHoyde(rot.venstre), finnHoyde(rot.hoyre));

@@ -11,7 +11,7 @@ public class Oppgave2 {
         for(int i = 0; i < array.length; i++) {
             ord.settInn(array[i]);
         }
-        ord.printTreFormat();
+        ord.printTreeFormat();
     }
 }
 
