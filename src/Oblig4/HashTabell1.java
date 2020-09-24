@@ -109,9 +109,6 @@ public class HashTabell1 {
     } else {
       System.out.println("Person ikke funnet");
     }
-
-
     System.out.println(ht.analyse());
-    System.out.println(ht.arr[16].neste.data);
   }
 }
