@@ -32,14 +32,14 @@ public class HashTabell1 {
       arr[index] = new HashNode(s);
     } else {
       HashNode temp = arr[index];
-      String last = "Kollisjon på index " + index + ":" + temp.data + " -> ";
+      String funnet = "Kollisjon på index " + index + ":" + temp.data + " -> ";
       kollisjon ++;
       while (temp.neste != null) {
         temp = temp.neste;
         kollisjon ++;
-        last += temp.data + " -> ";
+        funnet += temp.data + " -> ";
       }
-      System.out.println(last + s);
+      System.out.println(funnet + s);
       temp.setNeste(new HashNode(s));
     }
   }
@@ -48,13 +48,12 @@ public class HashTabell1 {
     try {
       int index = hashFunc(s);
       HashNode temp = arr[index];
-      String last = "Finnkollisjon på index " + index + ": ";
-      while (!temp.neste.data.equals(s)) {
+      String funnet = "Person funnet på index " + index + ": ";
+      while (!temp.data.equals(s)) {
+        funnet +=  temp.data+ ", ";
         temp = temp.neste;
-        last += temp.data + " -> ";
       }
-      temp = temp.neste;
-      System.out.println(last + temp.data + " <- Funnet!!");
+      System.out.println(funnet + ", " + temp.data + " <- Funnet!!");
       return temp;
     } catch (NullPointerException e) {
       return null;
@@ -105,7 +104,7 @@ public class HashTabell1 {
     for (String s : temp) {
       ht.push(s);
     }
-    HashNode find = ht.find("Håvard,Tysland");
+    HashNode find = ht.find("Lars Brodin,Østby");
     if (find != null) {
       System.out.println(find.data);
     } else {
@@ -114,5 +113,6 @@ public class HashTabell1 {
 
 
     System.out.println(ht.analyse());
+    System.out.println(ht.arr[16].neste.data);
   }
 }

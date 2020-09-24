@@ -62,7 +62,7 @@ public class HashTabell2 {
 
   public static void main(String[] args) {
 
-    int lengde = 5000000;
+    int lengde = 10000000;
     int finn = 10543;
     HashTabell2 hashTabell2 = new HashTabell2(lengde);
 
