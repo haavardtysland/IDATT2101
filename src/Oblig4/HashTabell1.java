@@ -1,9 +1,7 @@
 package Oblig4;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 //oppgave 1
@@ -85,10 +83,11 @@ public class HashTabell1 {
     return pers;
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws MalformedURLException {
     ArrayList<String> temp = new ArrayList<>();
+    URL url = new URL("https://ait.idi.ntnu.no/fag/_alg/hash/navn20.txt");
     try {
-      BufferedReader br = new BufferedReader(new FileReader(new File("C:\\Users\\haava\\OneDrive\\Dokumenter\\Progging\\Øvinger\\AlgDatØvinger\\IDATT2101\\src\\Oblig4\\navn20.txt")));
+      BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
       String line;
       while ((line = br.readLine()) != null) {
         temp.add(line);
@@ -104,7 +103,7 @@ public class HashTabell1 {
     for (String s : temp) {
       ht.push(s);
     }
-    HashNode find = ht.find("Lars Brodin,Østby");
+    HashNode find = ht.find("Håvard,Tysland");
     if (find != null) {
       System.out.println(find.data);
     } else {
