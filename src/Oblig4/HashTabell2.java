@@ -9,7 +9,7 @@ public class HashTabell2 {
   private int kollisjon;
 
   public HashTabell2(int length) {
-    this.arr = new int[length];
+    this.arr = new int[(int) Math.pow(2, Math.ceil(Math.log(length)/Math.log(2)))];
     System.out.println(arr.length);
     kollisjon = 0;
   }
@@ -32,7 +32,7 @@ public class HashTabell2 {
       int counter = 1;
       while (counter < arr.length) {
         int h2 = (modHash(x) * counter + h1) % (arr.length - 1);
-        if (arr[h2] == x) {
+        if (arr[h2] == 0) {
           break;
         } else {
           counter++;
@@ -62,7 +62,7 @@ public class HashTabell2 {
 
   public static void main(String[] args) {
 
-    int lengde = 10000000;
+    int lengde = 5000000;
     int finn = 10543;
     HashTabell2 hashTabell2 = new HashTabell2(lengde);
 
