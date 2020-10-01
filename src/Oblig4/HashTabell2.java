@@ -1,6 +1,5 @@
 package Oblig4;
 
-import java.sql.SQLOutput;
 import java.util.Hashtable;
 
 //oppgave 2
