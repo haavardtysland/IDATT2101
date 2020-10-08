@@ -38,11 +38,10 @@ public class UvektetGraf {
         fraFilTransposeListe(url);
 
         for(int i = 0; i < N; i++) {
-
+            dfs(node[i]);
+            stack.push(i);
         }
-
-        for(Object s: stack.getStack()) {
-            System.out.println(s.toString());
+        while(stack.empty() == false) {
         }
     }
 
