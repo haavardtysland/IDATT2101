@@ -1,9 +1,9 @@
-package Oblig6;
+//package Oblig6;
 
 class Kant {
-  Oblig6.Kant neste;
+  Kant neste;
   Node til;
-  public Kant(Node n, Oblig6.Kant nst) {
+  public Kant(Node n, Kant nst) {
     til = n;
     neste = nst;
   }
