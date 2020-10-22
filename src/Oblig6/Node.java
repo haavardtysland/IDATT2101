@@ -1,4 +1,4 @@
-//package Oblig6;
+package Oblig6;
 
 class Node {
   Vkant kant1;

@@ -1,4 +1,4 @@
-//package Oblig6;
+package Oblig6;
 
 class Vkant extends Kant {
   int distanse;
