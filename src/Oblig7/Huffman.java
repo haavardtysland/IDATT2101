@@ -107,9 +107,9 @@ import java.util.*;
   public static void main(String[] args) throws IOException {
     Huffman huff = new Huffman();
     File uncompressed = new File("test.txt");
-    huff.huffmannCompression(uncompressed, "C:\\Users\\haava\\OneDrive\\Dokumenter\\Progging\\Øvinger\\AlgDatØvinger\\ferdigtest.txt");
+    huff.huffmannCompression(uncompressed, "/Users/havardtysland/Documents/Dataing 3. semester/Algoritmer og datastrukturer/AlgDatØvinger/ferdigtest.txt");
     File compressed = new File("ferdigtest.txt");
-    huff.huffmannDecompression(compressed, "C:\\Users\\haava\\OneDrive\\Dokumenter\\Progging\\Øvinger\\AlgDatØvinger\\dekomprimert.txt");
+    //huff.huffmannDecompression(compressed, "C:\\Users\\haava\\OneDrive\\Dokumenter\\Progging\\Øvinger\\AlgDatØvinger\\dekomprimert.txt");
 
   }
 }
