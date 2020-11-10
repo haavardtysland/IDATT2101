@@ -36,6 +36,6 @@ class Node {
 
     @Override
     public String toString() {
-        return lengdegrad * (180 / Math.PI) + ", " + breddegrad* (180 / Math.PI) + ", " + navn;
+        return lengdegrad + ", " + breddegrad  +", " + navn;
     }
 }

@@ -43,14 +43,36 @@ public class Main {
                     String start = sc.next();
                     System.out.println("Skrv inn navn på sluttsted");
                     String slutt = sc.next();
-                    graf.finnRuteMedDijkstra(v, t);
+                    System.out.println("Vil du ha med navn(Uten navn gir kun bredde og lengdegrad, til grafisk bruk)?:\n1. Ja\n2.Nei");
+                    int valg = sc.nextInt();
+                    boolean navn;
+                    if(valg == 1) {
+                        navn = true;
+                        graf.finnRuteMedDijkstra(v, t, navn);
+                    } else if(valg == 2) {
+                        navn = false;
+                        graf.finnRuteMedDijkstra(v, t, navn);
+                    } else {
+                        System.out.println("Du skrev ikke et gyldig tall, prøv på nytt");
+                    }
                     graf.reset();
                  } else if(action == 2) {
                     System.out.println("Skriv inn navn på startsted");
                     String start = sc.next();
                     System.out.println("Skrv inn navn på sluttsted");
                     String slutt = sc.next();
-                    graf.finnRuteMedAstar(v,t);
+                    System.out.println("Vil du ha med navn(Uten navn gir kun bredde og lengdegrad, til grafisk bruk)?:\n1. Ja\n2.Nei");
+                    int valg = sc.nextInt();
+                    boolean navn;
+                    if(valg == 1) {
+                        navn = true;
+                        graf.finnRuteMedDijkstra(v, t, navn);
+                    } else if(valg == 2) {
+                        navn = false;
+                        graf.finnRuteMedDijkstra(v, t, navn);
+                    } else {
+                        System.out.println("Du skrev ikke et gyldig tall, prøv på nytt");
+                    }
                     graf.reset();
                 } else if(action == 3) {
                     System.out.println("Skriv inn sted");

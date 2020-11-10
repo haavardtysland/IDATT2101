@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.BufferOverflowException;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class Graf {
@@ -21,7 +22,9 @@ public class Graf {
         fyllInteressepunkt(interessepunkt); //Henter info fra interessepunktfilen
     }
 
-    //Metode for å "resette" grafen, hvis man vil gjøre noe med grafen flere ganger i samme kjøring
+    /**
+     * Metode for å resette grafen, ettersom man gjerne vil gjøre flere ting med grafen i en kjøring for å spare tid
+     */
     public void reset() {
         for(Node node : node) {
             node.sluttNode = false;
@@ -30,7 +33,11 @@ public class Graf {
         }
     }
 
-    //Fyller node med info fra nodefilen
+    /**
+     * Metode for å fylle grafen med nodefilen
+     * @param br en fil med nodenr, breddegrad, lengdegrad
+     * @throws IOException
+     */
     public void fyllNodefil(BufferedReader br) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
@@ -47,7 +54,11 @@ public class Graf {
         }
     }
 
-    //Fyller node med info fra kartfil
+    /**
+     * Metode for å fylle grafen med kantfil
+     * @param br en fil med franode, tilnode, kjøretid, lengde, fartsgrense
+     * @throws IOException
+     */
     public void fyllKartfil(BufferedReader br) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         K = Integer.parseInt(st.nextToken());
@@ -63,7 +74,11 @@ public class Graf {
         }
     }
 
-    //Fyller node med info fra interessepunktfil
+    /**
+     * En metode for å fylle interresepunktfilen
+     * @param br en fil med nodenr, kode, navn
+     * @throws IOException
+     */
     public void fyllInteressepunkt(BufferedReader br) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         P = Integer.parseInt(st.nextToken());
@@ -82,6 +97,13 @@ public class Graf {
         }
     }
 
+    /**
+     * Metode for å estimere distanse mellom to noder
+     * Gitt i oppgaveteksten
+     * @param node1
+     * @param node2
+     * @return
+     */
     private int finnDistanse(Node node1, Node node2) {
         double sinBredde = Math.sin(((node1.breddeRad) - node2.breddeRad) / 2.0);
         double sinLengde = Math.sin((node1.lengdeRad - node2.lengdeRad) / 2.0);
@@ -89,14 +111,28 @@ public class Graf {
                 sinBredde * sinBredde + node1.cosBreddegrad * node2.cosBreddegrad * sinLengde * sinLengde)));
     }
 
+    /**
+     * Metode for å få prioritetskø med dijkstra
+     * @return en prioritetskø med Node
+     */
     private PriorityQueue<Node> getDijkstraPriorityQueue() {
         return new PriorityQueue<>(Comparator.comparingInt(a -> (a.data.distanse)));
     }
 
+    /**
+     * Metode for å få en prioritetskø med Astar
+     * @return en prirotietskø med Node
+     */
     private PriorityQueue<Node> getAstarPriorityQueue() {
         return new PriorityQueue<>(Comparator.comparingInt(a -> (a.data.fullDistanse)));
     }
 
+    /**
+     * Metode for å finne de 10 nærmeste gitt en kode, f.eks 2(bensinstasjon)
+     * @param startNode noden vi vil finne de nærmeste fra
+     * @param kode koden på den typen sted vi vil finne
+     * @return
+     */
     private Node[] dijkstraNaermesteVedKode(Node startNode, int kode) {
         startNode.data.distanse = 0;
         PriorityQueue<Node> queue = getDijkstraPriorityQueue();
@@ -118,6 +154,11 @@ public class Graf {
         return naermest;
     }
 
+    /**
+     * Metode for å skrive ut de nærmeste 10
+     * @param startNodeNr noden vi vil finne de nærmeste fra
+     * @param kode koden på den typen vi vil finne
+     */
     public void finnNaermesteDijkstra(int startNodeNr, int kode) {
         Node[] nearmesteNoder = dijkstraNaermesteVedKode(node[startNodeNr], kode);
         for (Node node : nearmesteNoder) {
@@ -126,9 +167,16 @@ public class Graf {
         System.out.println("Lokasjoner: ");
         for (Node node : nearmesteNoder) {
             if (node != null)
-                System.out.println(node.breddegrad * (180 / Math.PI) + ", " + node.lengdegrad * (180 / Math.PI));
+                System.out.println(node.breddegrad + ", " + node.lengdegrad);
         }
     }
+
+    /**
+     * Metode for å finne raskeste vei ved å bruke Dijkstras algoritme
+     * @param startNode startnoden
+     * @param sluttNode sluttnoden
+     * @return antall noder besøkt
+     */
 
     private int dijkstraFraTil(Node startNode, Node sluttNode) {
         startNode.data.distanse = 0;
@@ -147,6 +195,12 @@ public class Graf {
         return -1;
     }
 
+    /**
+     * Metode for å finne den raskeste veien ved å bruke Astar algoritme
+     * @param startNode startnoden
+     * @param sluttNode sluttnoden
+     * @return antall noder besøkt
+     */
     private int astarFraTil(Node startNode, Node sluttNode) {
         startNode.data.distanse = 0;
         startNode.data.distanseTilSlutt = finnDistanse(startNode, sluttNode);
@@ -166,32 +220,69 @@ public class Graf {
         return -1;
     }
 
-    public void finnRuteMedDijkstra(int fra, int til) {
+    /**
+     * Metode for å skrive ut den raskeste ruten med Dijkstras algoritme
+     * @param fra nr til startnoden
+     * @param til nr til sluttnoden
+     * @param navn om navn skal være med i filen
+     */
+    public void finnRuteMedDijkstra(int fra, int til, boolean navn) {
         Node startNode = node[fra];
         Node sluttNode = node[til];
         long startTid = System.nanoTime();
         int sjekket = dijkstraFraTil(startNode, sluttNode);
         long tid = System.nanoTime() - startTid;
         System.out.println("Dijkstra: " + sjekket + " noder sjekket, " + (double) tid / 1000000 + "ms brukt.");
-        printRute(startNode, sluttNode);
+        printRuteTilFil(startNode, sluttNode, navn);
     }
 
-    public void finnRuteMedAstar(int fra, int til) {
+    /**
+     * Metode for å skrive ut den raskeste ruten med Astar algoritme
+     * @param fra nr til startnode
+     * @param til nr til sluttnode
+     * @param navn om navn skal være med i filen
+     */
+    public void finnRuteMedAstar(int fra, int til, boolean navn) {
         Node startNode = node[fra];
         Node sluttNode = node[til];
         long startTid = System.nanoTime();
         int sjekket = astarFraTil(startNode, sluttNode);
         long tid = System.nanoTime() - startTid;
         System.out.println("Astar: " + sjekket + " noder sjekket, " + (double) tid / 1000000 + "ms brukt.");
-        printRute(startNode, sluttNode);
+        printRuteTilFil(startNode, sluttNode, navn);
     }
 
-    private void printRute(Node startNode, Node sluttNode) {
+    /**
+     * Metode for å printe den raskeste ruten til fil
+     * @param startNode noden i startpunktet
+     * @param sluttNode noden i sluttpunktet
+     * @param navn om navn skal være med i filen
+     */
+    private void printRuteTilFil(Node startNode, Node sluttNode, boolean navn) {
         String startNavn = startNode.navn.replaceAll("[^a-zA-Z0-9]", "");
         String sluttNavn = sluttNode.navn.replaceAll("[^a-zA-Z0-9]", "");
         String filNavn = startNavn + "-" + sluttNavn + ".txt";
-        try (FileWriter outputStream = new FileWriter(filNavn)) {
-            Node node = sluttNode;
+        Node node = sluttNode;
+        try {
+            if (navn) {
+                ruteTilFil(node, filNavn);
+            } else {
+                koordinaterTilFil(node, filNavn);
+            }
+        } catch(IOException e) {
+            System.out.println(e);
+        }
+    }
+
+
+    /**
+     * Metode for å skrive ruten til fil, her kommer navnet med
+     * @param node begynner på sluttnoden og går bakover
+     * @param filNavn navn på filen
+     * @throws IOException
+     */
+    private void ruteTilFil(Node node, String filNavn) throws IOException {
+        try ( FileWriter outputStream = new FileWriter(filNavn)) {
             int millisekund = node.data.distanse * 10;
             int sekund = (millisekund / 1000) % 60;
             int minutt = ((millisekund / (1000 * 60)) % 60);
@@ -201,13 +292,40 @@ public class Graf {
                 outputStream.write(node.toString() + "\n");
                 node = node.data.forgjenger;
             }
-            System.out.println("Ruten har blitt printet til filen: " + filNavn);
-        } catch (IOException e) {
-            System.out.println("ERROR: Kunne ikke finne/printe ruten");
+            System.out.println("Ruten er skrevet til filen" + filNavn + "\n");
+        } catch(IOException e) {
+            System.out.println("Kunne ikke finne/printe ruten");
+        }
+    }
+
+    /**
+     * Metode får å skrive rute til fil kun med koordinater, til bruk for å plotte grafisk
+     * @param node begynner på sluttnoden og går bakover
+     * @param filNavn navn på filen
+     * @throws IOException
+     */
+    private void koordinaterTilFil(Node node, String filNavn) throws IOException {
+        filNavn = "Grafisk" + filNavn;
+        try(FileWriter outputStream = new FileWriter(filNavn)) {
+
+            while (node != null) {
+                outputStream.write(node.breddegrad + ", " + node.lengdegrad + "\n");
+                node = node.data.forgjenger;
+            }
+            System.out.println("Skrevet til filen " + filNavn);
+            System.out.println("Formatet er lagt opp til å bruke nettsiden maps.co\n");
+        } catch(IOException e) {
+            System.out.println(e);
         }
     }
 
 
+    /**
+     * Metode for å forkorte til den korteste vei er funnet
+     * @param node går gjennom nodene
+     * @param kant denne nodens kant
+     * @param queue prioritetskøen, de besøkte nodene blir lagt til her og prioritert ved å sette de raskeste høyest
+     */
     void forkort(Node node, Vkant kant, PriorityQueue<Node> queue) {
         Forgjenger nodeForgjenger = node.data;
         Forgjenger nesteForgjenger = kant.til.data;
@@ -219,6 +337,13 @@ public class Graf {
         }
     }
 
+    /**
+     * Metode for å forkorte til den korteste vei er funnet
+     * @param startNode startNoden
+     * @param kant kanten
+     * @param sluttNode sluttNoden
+     * @param queue prioritetskøen, de besøkte nodene blir lagt til her og prioritert ved å sette de raskeste høyest
+     */
     void forkort(Node startNode, Vkant kant, Node sluttNode, PriorityQueue<Node> queue) {
         Forgjenger startForgjenger = startNode.data;
         Forgjenger sluttForgjenger = kant.til.data;
@@ -234,6 +359,4 @@ public class Graf {
             queue.add(kant.til);
         }
     }
-
-
 }
