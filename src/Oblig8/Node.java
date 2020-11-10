@@ -29,4 +29,8 @@ class Node {
         this.kode = kode;
     }
 
+    @Override
+    public String toString() {
+        return breddegrad * (180 / Math.PI) + ", " + lengdegrad * (180 / Math.PI) + ", " + navn;
+    }
 }

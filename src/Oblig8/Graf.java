@@ -19,6 +19,16 @@ public class Graf {
         fyllInteressepunkt(interessepunkt); //Henter info fra interessepunktfilen
     }
 
+    //Metode for å "resette" grafen, hvis man vil gjøre noe med grafen flere ganger i samme kjøring
+    public void reset() {
+        for(Node node : node) {
+            node.sluttNode = false;
+            node.data = new Forgjenger();
+            node.besokt = false;
+        }
+    }
+
+    //Fyller node med info fra nodefilen
     public void fyllNodefil(URL url) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -35,6 +45,7 @@ public class Graf {
         }
     }
 
+    //Fyller node med info fra kartfil
     public void fyllKartfil(URL url) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -51,7 +62,7 @@ public class Graf {
         }
     }
 
-
+    //Fyller node med info fra interessepunktfil
     public void fyllInteressepunkt(URL url) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -79,42 +90,42 @@ public class Graf {
         return new PriorityQueue<>(Comparator.comparingInt(a -> (a.data.fullDistanse)));
     }
 
-    private Node[] dijkstraNearestByType(Node startNode, int type) {
+    private Node[] dijkstraNaermesteVedKode(Node startNode, int kode) {
         startNode.data.distanse = 0;
         PriorityQueue<Node> queue = getDijkstraPriorityQueue();
         queue.add(startNode);
-        Node[] nearest = new Node[10];
-        int noFound = 0;
+        Node[] naermest = new Node[10];
+        int ikkeFunnet = 0;
         for (int i = N; i > 1 && !queue.isEmpty(); --i) {
             Node node = queue.poll();
-            if (!node.besokt && (node.kode == type || ((type == 2 || type == 4) && node.kode == 6))) {
-                nearest[noFound] = node;
-                noFound++;
+            if (!node.besokt && (node.kode == kode || ((kode == 2 || kode == 4) && node.kode == 6))) {
+                naermest[ikkeFunnet] = node;
+                ikkeFunnet++;
                 node.besokt = true;
             }
-            if (noFound == 10) break;
-            for (Vkant edge = node.kant1; edge != null; edge = (Vkant) edge.neste) {
-                forkort(node, edge, queue);
+            if (ikkeFunnet == 10) break;
+            for (Vkant kant = node.kant1; kant != null; kant = (Vkant) kant.neste) {
+                forkort(node, kant, queue);
             }
         }
-        return nearest;
+        return naermest;
     }
 
-    public void findNearestByTypeWithDijkstra(int startNodeNr, int type) {
-        Node[] nearestNodes = dijkstraNearestByType(this.node[startNodeNr], type);
-        for (Node node : nearestNodes) {
+    public void finnNaermesteDijkstra(int startNodeNr, int kode) {
+        Node[] nearmesteNode = dijkstraNaermesteVedKode(node[startNodeNr], kode);
+        for (Node node : nearmesteNode) {
             if (node != null) System.out.println(node.navn + " " + node.kode);
         }
-        System.out.println("Locations: ");
-        for (Node node : nearestNodes) {
+        System.out.println("Lokasjoner: ");
+        for (Node node : nearmesteNode) {
             if (node != null)
                 System.out.println(node.breddegrad * (180 / Math.PI) + ", " + node.lengdegrad * (180 / Math.PI));
         }
     }
 
-    private int dijkstraFromTo(Node startNode, Node endNode) {
+    private int dijkstraFraTil(Node startNode, Node sluttNode) {
         startNode.data.distanse = 0;
-        endNode.sluttNode = true;
+        sluttNode.sluttNode = true;
         PriorityQueue<Node> queue = getDijkstraPriorityQueue();
         queue.add(startNode);
         int count = 0;
@@ -122,18 +133,18 @@ public class Graf {
             Node node = queue.poll();
             count++;
             if (node.sluttNode) return count;
-            for (Vkant edge = node.kant1; edge != null; edge = (Vkant)edge.neste) {
-                forkort(node, edge, queue);
+            for (Vkant kant = node.kant1; kant != null; kant = (Vkant)kant.neste) {
+                forkort(node, kant, queue);
             }
         }
         return -1;
     }
 
-    private int astarFromTo(Node startNode, Node endNode) {
+    private int astarFraTil(Node startNode, Node sluttNode) {
         startNode.data.distanse = 0;
-        startNode.data.distanseTilSlutt = finnDistanse(startNode, endNode);
+        startNode.data.distanseTilSlutt = finnDistanse(startNode, sluttNode);
         startNode.data.fullDistanse = startNode.data.distanseTilSlutt;
-        endNode.sluttNode = true;
+        sluttNode.sluttNode = true;
         PriorityQueue<Node> queue = getAstarPriorityQueue();
         queue.add(startNode);
         int count = 0;
@@ -141,51 +152,51 @@ public class Graf {
             Node node = queue.poll();
             count++;
             if (node.sluttNode) return count;
-            for (Vkant edge = node.kant1; edge != null; edge = (Vkant)edge.neste) {
-                forkort(node, edge, endNode, queue);
+            for (Vkant kant = node.kant1; kant != null; kant = (Vkant)kant.neste) {
+                forkort(node, kant, sluttNode, queue);
             }
         }
         return -1;
     }
 
-    public void findRouteWithDijkstra(int from, int to) {
-        Node startNode = this.node[from];
-        Node endNode = this.node[to];
-        long startTime = System.nanoTime();
-        int checked = dijkstraFromTo(startNode, endNode);
-        long time = System.nanoTime() - startTime;
-        System.out.println("Dijkstra: " + checked + " nodes checked, " + (double) time / 1000000 + "ms taken.");
-        printRoute(startNode, endNode);
+    public void finnRuteMedDijkstra(int fra, int til) {
+        Node startNode = node[fra];
+        Node sluttNode = node[til];
+        long startTid = System.nanoTime();
+        int sjekket = dijkstraFraTil(startNode, sluttNode);
+        long tid = System.nanoTime() - startTid;
+        System.out.println("Dijkstra: " + sjekket + " noder sjekket, " + (double) tid / 1000000 + "ms brukt.");
+        printRute(startNode, sluttNode);
     }
 
-    public void findRouteWithAstar(int from, int to) {
-        Node startNode = this.node[from];
-        Node endNode = this.node[to];
-        long startTime = System.nanoTime();
-        int checked = astarFromTo(startNode, endNode);
-        long time = System.nanoTime() - startTime;
-        System.out.println("Astar: " + checked + " nodes checked, " + (double) time / 1000000 + "ms taken.");
-        printRoute(startNode, endNode);
+    public void finnRuteMedAstar(int fra, int til) {
+        Node startNode = node[fra];
+        Node sluttNode = node[til];
+        long startTid = System.nanoTime();
+        int sjekket = astarFraTil(startNode, sluttNode);
+        long tid = System.nanoTime() - startTid;
+        System.out.println("Astar: " + sjekket + " noder sjekket, " + (double) tid / 1000000 + "ms brukt.");
+        printRute(startNode, sluttNode);
     }
 
-    private void printRoute(Node startNode, Node endNode) {
-        String startName = startNode.navn.replaceAll("[^a-zA-Z0-9]", "");
-        String endName = endNode.navn.replaceAll("[^a-zA-Z0-9]", "");
-        String fileName = startName + "-" + endName + ".txt";
-        try (FileWriter outputStream = new FileWriter(fileName)) {
-            Node node = endNode;
-            int milliseconds = node.data.distanse * 10;
-            int seconds = (milliseconds / 1000) % 60;
-            int minutes = ((milliseconds / (1000 * 60)) % 60);
-            int hours = ((milliseconds / (1000 * 60 * 60)) % 24);
-            System.out.println("Time: " + String.format("%02d hours, %02d min, %02d sec", hours, minutes, seconds));
+    private void printRute(Node startNode, Node sluttNode) {
+        String startNavn = startNode.navn.replaceAll("[^a-zA-Z0-9]", "");
+        String sluttNavn = sluttNode.navn.replaceAll("[^a-zA-Z0-9]", "");
+        String filNavn = startNavn + "-" + sluttNavn + ".txt";
+        try (FileWriter outputStream = new FileWriter(filNavn)) {
+            Node node = sluttNode;
+            int millisekund = node.data.distanse * 10;
+            int sekund = (millisekund / 1000) % 60;
+            int minutt = ((millisekund / (1000 * 60)) % 60);
+            int timer = ((millisekund / (1000 * 60 * 60)) % 24);
+            System.out.println("Tid: " + String.format("%02d timer, %02d minutt, %02d sekund", timer, minutt, sekund));
             while (node != null) {
                 outputStream.write(node.toString() + "\n");
                 node = node.data.forgjenger;
             }
-            System.out.println("The route has been printed to the file: " + fileName);
+            System.out.println("Ruten har blitt printet til filen: " + filNavn);
         } catch (IOException e) {
-            System.out.println("ERROR: Couldn't find/print route.");
+            System.out.println("ERROR: Kunne ikke finne/printe ruten");
         }
     }
 
@@ -207,17 +218,17 @@ public class Graf {
         }
     }
 
-    void forkort(Node start, Vkant kant, Node slutt, PriorityQueue<Node> queue) {
-        Forgjenger startForgjenger = start.data;
+    void forkort(Node startNode, Vkant kant, Node sluttNode, PriorityQueue<Node> queue) {
+        Forgjenger startForgjenger = startNode.data;
         Forgjenger sluttForgjenger = kant.til.data;
         if(sluttForgjenger.distanseTilSlutt == -1) {
-            int distanse = finnDistanse(kant.til, slutt);
+            int distanse = finnDistanse(kant.til, sluttNode);
             sluttForgjenger.distanseTilSlutt = distanse;
             sluttForgjenger.fullDistanse = distanse + sluttForgjenger.distanse;
         }
         if(sluttForgjenger.distanse > startForgjenger.distanse + kant.kjoeretid) {
             sluttForgjenger.distanse = startForgjenger.distanse + kant.kjoeretid;
-            sluttForgjenger.forgjenger = start;
+            sluttForgjenger.forgjenger = startNode;
             sluttForgjenger.fullDistanse = sluttForgjenger.distanse + sluttForgjenger.distanseTilSlutt;
             queue.add(kant.til);
         }
