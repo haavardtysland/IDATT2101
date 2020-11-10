@@ -5,15 +5,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.BufferOverflowException;
 import java.util.*;
 
 public class Graf {
-    private int N, K; //N = antall noder K= antall kanter
+    private int N, K, P; //N = antall noder K= antall kanter, P = antall interessepunkter
     private Node[] node;
+    HashMap<String, Integer> steder = new HashMap<>();
 
     PriorityQueue<Node> priorityQueue;
 
-    public Graf(URL nodefil, URL kartfil, URL interessepunkt) throws IOException {
+    public Graf(BufferedReader nodefil, BufferedReader kartfil, BufferedReader interessepunkt) throws IOException {
         fyllNodefil(nodefil); //Henter info fra nodefilen
         fyllKartfil(kartfil); //Henter info fra kartfil
         fyllInteressepunkt(interessepunkt); //Henter info fra interessepunktfilen
@@ -29,8 +31,7 @@ public class Graf {
     }
 
     //Fyller node med info fra nodefilen
-    public void fyllNodefil(URL url) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+    public void fyllNodefil(BufferedReader br) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         node = new Node[N];
@@ -42,12 +43,12 @@ public class Graf {
             double lengdegrad = Double.parseDouble(st.nextToken());
             node[i] = new Node(nodenr, breddegrad, lengdegrad);
             node[i].data = new Forgjenger();
+            node[i].cosBreddegrad = Math.cos(breddegrad);
         }
     }
 
     //Fyller node med info fra kartfil
-    public void fyllKartfil(URL url) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+    public void fyllKartfil(BufferedReader br) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         K = Integer.parseInt(st.nextToken());
         for (int i = 0; i < K; ++i) {
@@ -63,23 +64,29 @@ public class Graf {
     }
 
     //Fyller node med info fra interessepunktfil
-    public void fyllInteressepunkt(URL url) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+    public void fyllInteressepunkt(BufferedReader br) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int antall = Integer.parseInt(st.nextToken());
+        P = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < antall; i++) {
+        for (int i = 0; i < P; ++i) {
             st = new StringTokenizer(br.readLine());
             int nodenr = Integer.parseInt(st.nextToken());
             int kode = Integer.parseInt(st.nextToken());
             String navn = "";
             while (st.hasMoreTokens()) {
-                navn +=  st.nextToken() + " ";
+                navn += st.nextToken() + " ";
             }
-            Node n = node[nodenr];
-            n.setNavn(navn);
-            n.setKode(kode);
+            node[nodenr].setNavn(navn);
+            node[nodenr].setKode(kode);
+            steder.put(navn, nodenr);
         }
+    }
+
+    private int finnDistanse(Node node1, Node node2) {
+        double sinBredde = Math.sin(((node1.breddeRad) - node2.breddeRad) / 2.0);
+        double sinLengde = Math.sin((node1.lengdeRad - node2.lengdeRad) / 2.0);
+        return (int) (35285538.46153846153846153846 * Math.asin(Math.sqrt(
+                sinBredde * sinBredde + node1.cosBreddegrad * node2.cosBreddegrad * sinLengde * sinLengde)));
     }
 
     private PriorityQueue<Node> getDijkstraPriorityQueue() {
@@ -112,12 +119,12 @@ public class Graf {
     }
 
     public void finnNaermesteDijkstra(int startNodeNr, int kode) {
-        Node[] nearmesteNode = dijkstraNaermesteVedKode(node[startNodeNr], kode);
-        for (Node node : nearmesteNode) {
+        Node[] nearmesteNoder = dijkstraNaermesteVedKode(node[startNodeNr], kode);
+        for (Node node : nearmesteNoder) {
             if (node != null) System.out.println(node.navn + " " + node.kode);
         }
         System.out.println("Lokasjoner: ");
-        for (Node node : nearmesteNode) {
+        for (Node node : nearmesteNoder) {
             if (node != null)
                 System.out.println(node.breddegrad * (180 / Math.PI) + ", " + node.lengdegrad * (180 / Math.PI));
         }
@@ -128,11 +135,11 @@ public class Graf {
         sluttNode.sluttNode = true;
         PriorityQueue<Node> queue = getDijkstraPriorityQueue();
         queue.add(startNode);
-        int count = 0;
+        int noderSjekket = 0;
         while (!queue.isEmpty()) {
             Node node = queue.poll();
-            count++;
-            if (node.sluttNode) return count;
+            noderSjekket++;
+            if (node.sluttNode) return noderSjekket;
             for (Vkant kant = node.kant1; kant != null; kant = (Vkant)kant.neste) {
                 forkort(node, kant, queue);
             }
@@ -147,11 +154,11 @@ public class Graf {
         sluttNode.sluttNode = true;
         PriorityQueue<Node> queue = getAstarPriorityQueue();
         queue.add(startNode);
-        int count = 0;
+        int noderSjekket = 0;
         while (!queue.isEmpty()) {
             Node node = queue.poll();
-            count++;
-            if (node.sluttNode) return count;
+            noderSjekket++;
+            if (node.sluttNode) return noderSjekket;
             for (Vkant kant = node.kant1; kant != null; kant = (Vkant)kant.neste) {
                 forkort(node, kant, sluttNode, queue);
             }
@@ -201,19 +208,13 @@ public class Graf {
     }
 
 
-    private int finnDistanse(Node node1, Node node2) {
-        double sinLat = Math.sin((node1.lengdegrad - node2.lengdegrad) / 2.0);
-        double sinLng = Math.sin((node1.breddegrad - node2.breddegrad) / 2.0);
-        return (int) (35285538.46153846153846153846 * Math.asin(Math.sqrt(
-                sinLat * sinLat + node1.cosBreddegrad * node2.cosBreddegrad * sinLng * sinLng)));
-    }
-
     void forkort(Node node, Vkant kant, PriorityQueue<Node> queue) {
         Forgjenger nodeForgjenger = node.data;
         Forgjenger nesteForgjenger = kant.til.data;
         if (nesteForgjenger.distanse > nodeForgjenger.distanse + kant.kjoeretid) {
             nesteForgjenger.distanse = nodeForgjenger.distanse + kant.kjoeretid;
             nesteForgjenger.forgjenger = node;
+            queue.remove(kant.til);
             queue.add(kant.til);
         }
     }

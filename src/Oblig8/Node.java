@@ -7,6 +7,8 @@ class Node {
     double breddegrad;
     double lengdegrad;
     double cosBreddegrad;
+    double breddeRad; //breddegrad i radianer
+    double lengdeRad; //lengdegrad i radianer
     boolean besokt;
     boolean sluttNode;
     String navn;
@@ -18,6 +20,9 @@ class Node {
         this.lengdegrad = lengdegrad;
         this.besokt = false;
         this.cosBreddegrad = Math.cos(breddegrad);
+        this.breddeRad = breddegrad * Math.PI / 180;
+        this.lengdeRad = lengdegrad * Math.PI / 180;
+        this.navn = "";
 
     }
 
@@ -31,6 +36,6 @@ class Node {
 
     @Override
     public String toString() {
-        return breddegrad * (180 / Math.PI) + ", " + lengdegrad * (180 / Math.PI) + ", " + navn;
+        return lengdegrad * (180 / Math.PI) + ", " + breddegrad* (180 / Math.PI) + ", " + navn;
     }
 }
