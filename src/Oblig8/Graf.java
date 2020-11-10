@@ -12,7 +12,6 @@ import java.util.*;
 public class Graf {
     private int N, K, P; //N = antall noder K= antall kanter, P = antall interessepunkter
     private Node[] node;
-    HashMap<String, Integer> steder = new HashMap<>();
 
     PriorityQueue<Node> priorityQueue;
 
@@ -93,7 +92,6 @@ public class Graf {
             }
             node[nodenr].setNavn(navn);
             node[nodenr].setKode(kode);
-            steder.put(navn, nodenr);
         }
     }
 
@@ -161,13 +159,22 @@ public class Graf {
      */
     public void finnNaermesteDijkstra(int startNodeNr, int kode) {
         Node[] nearmesteNoder = dijkstraNaermesteVedKode(node[startNodeNr], kode);
+        String type;
+        if(kode == 6) {
+            type = "ladestasjoner og bensistasjoner";
+        } else if(kode == 1){
+            type = "steder";
+        } else {
+            type = kode == 2 ? "bensinstasjoner" : "ladestasjoner";
+        }
+        System.out.println("Nærmeste " + type + " ved " + node[startNodeNr].navn);
         for (Node node : nearmesteNoder) {
             if (node != null) System.out.println(node.navn + " " + node.kode);
         }
         System.out.println("Lokasjoner: ");
         for (Node node : nearmesteNoder) {
             if (node != null)
-                System.out.println(node.breddegrad + ", " + node.lengdegrad);
+                System.out.println(node.breddegrad + ", " + node.lengdegrad + ", " + node.navn);
         }
     }
 
