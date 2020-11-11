@@ -9,6 +9,10 @@ import java.nio.BufferOverflowException;
 import java.sql.SQLOutput;
 import java.util.*;
 
+/**
+ * Klassen graf som representerer grafen med alle nodene og kantene
+ */
+
 public class Graf {
     private int N, K, P; //N = antall noder K= antall kanter, P = antall interessepunkter
     private Node[] node;
@@ -231,64 +235,44 @@ public class Graf {
      * Metode for å skrive ut den raskeste ruten med Dijkstras algoritme
      * @param fra nr til startnoden
      * @param til nr til sluttnoden
-     * @param navn om navn skal være med i filen
      */
-    public void finnRuteMedDijkstra(int fra, int til, boolean navn) {
+    public void finnRuteMedDijkstra(int fra, int til) {
         Node startNode = node[fra];
         Node sluttNode = node[til];
         long startTid = System.nanoTime();
         int sjekket = dijkstraFraTil(startNode, sluttNode);
         long tid = System.nanoTime() - startTid;
         System.out.println("Dijkstra: " + sjekket + " noder sjekket, " + (double) tid / 1000000 + "ms brukt.");
-        printRuteTilFil(startNode, sluttNode, navn);
+        printRuteTilFil(startNode, sluttNode);
     }
 
     /**
      * Metode for å skrive ut den raskeste ruten med Astar algoritme
      * @param fra nr til startnode
      * @param til nr til sluttnode
-     * @param navn om navn skal være med i filen
      */
-    public void finnRuteMedAstar(int fra, int til, boolean navn) {
+    public void finnRuteMedAstar(int fra, int til) {
         Node startNode = node[fra];
         Node sluttNode = node[til];
         long startTid = System.nanoTime();
         int sjekket = astarFraTil(startNode, sluttNode);
         long tid = System.nanoTime() - startTid;
         System.out.println("Astar: " + sjekket + " noder sjekket, " + (double) tid / 1000000 + "ms brukt.");
-        printRuteTilFil(startNode, sluttNode, navn);
+        printRuteTilFil(startNode, sluttNode);
     }
 
-    /**
-     * Metode for å printe den raskeste ruten til fil
+
+     /**
+     * Metode for å skrive ruten til fil, formatet er breddegrad, lengdegrad
      * @param startNode noden i startpunktet
      * @param sluttNode noden i sluttpunktet
-     * @param navn om navn skal være med i filen
+     * @throws IOException
      */
-    private void printRuteTilFil(Node startNode, Node sluttNode, boolean navn) {
+    private void printRuteTilFil(Node startNode, Node sluttNode ) {
         String startNavn = startNode.navn.replaceAll("[^a-zA-Z0-9]", "");
         String sluttNavn = sluttNode.navn.replaceAll("[^a-zA-Z0-9]", "");
         String filNavn = startNavn + "-" + sluttNavn + ".txt";
         Node node = sluttNode;
-        try {
-            if (navn) {
-                ruteTilFil(node, filNavn);
-            } else {
-                koordinaterTilFil(node, filNavn);
-            }
-        } catch(IOException e) {
-            System.out.println(e);
-        }
-    }
-
-
-    /**
-     * Metode for å skrive ruten til fil, her kommer navnet med
-     * @param node begynner på sluttnoden og går bakover
-     * @param filNavn navn på filen
-     * @throws IOException
-     */
-    private void ruteTilFil(Node node, String filNavn) throws IOException {
         try ( FileWriter outputStream = new FileWriter(filNavn)) {
             int millisekund = node.data.distanse * 10;
             int sekund = (millisekund / 1000) % 60;
@@ -299,33 +283,12 @@ public class Graf {
                 outputStream.write(node.toString() + "\n");
                 node = node.data.forgjenger;
             }
-            System.out.println("Ruten er skrevet til filen" + filNavn + "\n");
+            System.out.println("Ruten er skrevet til filen:  " + filNavn + "\n");
+            System.out.println("Formatet er slik at filen kan brukes til å plotte inn grafisk ved nettsiden maps.co");
         } catch(IOException e) {
             System.out.println("Kunne ikke finne/printe ruten");
         }
     }
-
-    /**
-     * Metode får å skrive rute til fil kun med koordinater, til bruk for å plotte grafisk
-     * @param node begynner på sluttnoden og går bakover
-     * @param filNavn navn på filen
-     * @throws IOException
-     */
-    private void koordinaterTilFil(Node node, String filNavn) throws IOException {
-        filNavn = "Grafisk" + filNavn;
-        try(FileWriter outputStream = new FileWriter(filNavn)) {
-
-            while (node != null) {
-                outputStream.write(node.breddegrad + ", " + node.lengdegrad + "\n");
-                node = node.data.forgjenger;
-            }
-            System.out.println("Skrevet til filen " + filNavn);
-            System.out.println("Formatet er lagt opp til å bruke nettsiden maps.co\n");
-        } catch(IOException e) {
-            System.out.println(e);
-        }
-    }
-
 
     /**
      * Metode for å forkorte til den korteste vei er funnet

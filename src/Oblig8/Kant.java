@@ -1,6 +1,8 @@
 package Oblig8;
 
-
+/**
+ * Klassen Kant 
+ */
 class Kant {
     Node til;
     Kant neste;

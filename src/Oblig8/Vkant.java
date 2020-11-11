@@ -1,5 +1,8 @@
 package Oblig8;
 
+/**
+ * Klassen Vkant som representerer en vektet kant, arver fra klassen Kant
+ */
 class Vkant extends Kant {
 
     int kjoeretid;

@@ -35,58 +35,29 @@ public class Main {
 
             while(run) {
                 System.out.println("Skriv inn det tallet som hører til det du ønsker å gjøre");
-                System.out.println("1. Rakeste vei fra et punkt til et annet med Dijkstra \n2. Raskeste vei fra et punkt til et annet med aStar\n3. Finne 10 nærmeste av en type fra et sted\n4. Avslutt");
+                System.out.println("1. Rakeste vei fra et punkt til et annet med Dijkstra \n2. Raskeste vei fra et punkt til et annet med Astar\n3. Finne 10 nærmeste av en type fra et sted\n4. Avslutt");
                 int action = sc.nextInt();
                 if(action == 1) {
-                    System.out.println("Vil du ha med navn(Uten navn gir kun bredde og lengdegrad, til grafisk bruk)?:\n1. Ja\n2.Nei");
-                    int valg = sc.nextInt();
-                    boolean navn;
-                    if(valg == 1) {
-                        navn = true;
-                        graf.finnRuteMedDijkstra(k, g, navn);
-                        graf.reset();
-                        graf.finnRuteMedDijkstra(t, h, navn);
-                    } else if(valg == 2) {
-                        navn = false;
-                        graf.finnRuteMedDijkstra(k, g, navn);
-                        graf.reset();
-                        graf.finnRuteMedDijkstra(t, h, navn);
-                    } else {
-                        System.out.println("Du skrev ikke et gyldig tall, prøv på nytt");
-                    }
+                    graf.finnRuteMedDijkstra(k, g);
                     graf.reset();
-                 } else if(action == 2) {
-                    System.out.println("Vil du ha med navn(Uten navn gir kun bredde og lengdegrad, til grafisk bruk)?:\n1. Ja\n2.Nei");
-                    int valg = sc.nextInt();
-                    boolean navn;
-                    if(valg == 1) {
-                        navn = true;
-                        graf.finnRuteMedAstar(k, g, navn);
-                        graf.reset();
-                        graf.finnRuteMedAstar(t,h, navn);
-                    } else if(valg == 2) {
-                        navn = false;
-                        graf.finnRuteMedAstar(k, g, navn);
-                        graf.reset();
-                        graf.finnRuteMedAstar(t, h, navn);
-                    } else {
-                        System.out.println("Du skrev ikke et gyldig tall, prøv på nytt");
-                    }
+                    graf.finnRuteMedDijkstra(t, h);
+                    graf.reset();
+                 } else if(action == 2) { ;
+                    graf.finnRuteMedAstar(k, g);
+                    graf.reset();
+                    graf.finnRuteMedAstar(t, h);
                     graf.reset();
                 } else if(action == 3) {
                     graf.finnNaermesteDijkstra(v, 2);
                     graf.reset();
                     graf.finnNaermesteDijkstra(r, 4);
-
                 } else if(action == 4) {
                     System.out.println("Avslutter...");
                     run =false;
                 } else {
                     System.out.println("Skriv inn ett tall mellom 1 og 4");
                 }
-        }
-
-
+            }
         } catch(Exception e) {
             System.out.println(e);
         }

@@ -1,5 +1,8 @@
 package Oblig8;
 
+/**
+ * Klassen Node som inneholder info om en node
+ */
 class Node {
     Vkant kant1;
     Forgjenger data;
@@ -36,6 +39,6 @@ class Node {
 
     @Override
     public String toString() {
-        return lengdegrad + ", " + breddegrad  +", " + navn;
+        return breddegrad + ", " + lengdegrad;
     }
 }

@@ -1,5 +1,8 @@
 package Oblig8;
 
+/**
+ *  Klassen Forgjenger
+ */
 class Forgjenger {
 
     int distanse;
