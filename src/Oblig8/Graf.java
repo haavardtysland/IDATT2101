@@ -121,6 +121,15 @@ public class Graf {
         return new PriorityQueue<>(Comparator.comparingInt(a -> (a.data.distanse)));
     }
 
+
+
+    public void initForgjenger(Node start) {
+        for(int i = N; i-->0;) {
+            node[i].data = new Forgjenger();
+        }
+        (start.data).distanse = 0;
+    }
+
     /**
      * Metode for å få en prioritetskø med Astar
      * @return en prirotietskø med Node
@@ -138,6 +147,7 @@ public class Graf {
     private Node[] dijkstraNaermesteVedKode(Node startNode, int kode) {
         startNode.data.distanse = 0;
         PriorityQueue<Node> queue = getDijkstraPriorityQueue();
+        initForgjenger(startNode);
         queue.add(startNode);
         Node[] naermest = new Node[10];
         int ikkeFunnet = 0;
@@ -220,7 +230,7 @@ public class Graf {
         PriorityQueue<Node> queue = getAstarPriorityQueue();
         queue.add(startNode);
         int noderSjekket = 0;
-        while ((!queue.isEmpty())) {
+        while (!queue.isEmpty()) {
             Node node = queue.poll();
             noderSjekket++;
             if (node.sluttNode) return noderSjekket;
@@ -326,7 +336,6 @@ public class Graf {
             sluttForgjenger.distanse = startForgjenger.distanse + kant.kjoeretid;
             sluttForgjenger.forgjenger = startNode;
             sluttForgjenger.fullDistanse = sluttForgjenger.distanse + sluttForgjenger.distanseTilSlutt;
-            queue.remove(kant.til);
             queue.add(kant.til);
         }
     }

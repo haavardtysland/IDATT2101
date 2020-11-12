@@ -49,6 +49,7 @@ public class Main {
                     graf.finnNaermesteDijkstra(v, 2);
                     graf.reset();
                     graf.finnNaermesteDijkstra(r, 4);
+                    graf.reset();
                 } else if(action == 4) {
                     System.out.println("Avslutter...");
                     run =false;
