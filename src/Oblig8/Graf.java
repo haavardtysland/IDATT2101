@@ -220,14 +220,14 @@ public class Graf {
         PriorityQueue<Node> queue = getAstarPriorityQueue();
         queue.add(startNode);
         int noderSjekket = 0;
-        while (!queue.isEmpty()) {
+        while ((!queue.isEmpty())) {
             Node node = queue.poll();
             noderSjekket++;
             if (node.sluttNode) return noderSjekket;
             for (Vkant kant = node.kant1; kant != null; kant = (Vkant)kant.neste) {
-                forkort(node, kant, sluttNode, queue);
+                    forkort(node, kant, sluttNode, queue);
+                }
             }
-        }
         return -1;
     }
 
@@ -283,8 +283,8 @@ public class Graf {
                 outputStream.write(node.toString() + "\n");
                 node = node.data.forgjenger;
             }
-            System.out.println("Ruten er skrevet til filen:  " + filNavn + "\n");
-            System.out.println("Formatet er slik at filen kan brukes til å plotte inn grafisk ved nettsiden maps.co");
+            System.out.println("Ruten er skrevet til filen:  " + filNavn);
+            System.out.println("Formatet er slik at filen kan brukes til å plotte inn grafisk ved nettsiden maps.co" + "\n");
         } catch(IOException e) {
             System.out.println("Kunne ikke finne/printe ruten");
         }
@@ -326,6 +326,7 @@ public class Graf {
             sluttForgjenger.distanse = startForgjenger.distanse + kant.kjoeretid;
             sluttForgjenger.forgjenger = startNode;
             sluttForgjenger.fullDistanse = sluttForgjenger.distanse + sluttForgjenger.distanseTilSlutt;
+            queue.remove(kant.til);
             queue.add(kant.til);
         }
     }

@@ -14,6 +14,7 @@ class Node {
     double lengdeRad; //lengdegrad i radianer
     boolean besokt;
     boolean sluttNode;
+    boolean inQueue;
     String navn;
     int kode;
 
