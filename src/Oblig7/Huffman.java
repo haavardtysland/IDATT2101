@@ -1,4 +1,4 @@
-//package Oblig7;
+package Oblig7;
 
 import java.io.*;
 import java.util.Arrays;
@@ -198,18 +198,15 @@ public class Huffman {
     return chars;
   }
 
-<<<<<<< HEAD
-  private void resetFrequencyArray(){
+  private void resetFrequencyArray() {
     frekvenser = new int[256];
-=======
+  }
+
   public static void main(String[] args) throws IOException {
     Huffman huff = new Huffman();
     File uncompressed = new File("test.txt");
     huff.huffmannCompression(uncompressed, "/Users/havardtysland/Documents/Dataing 3. semester/Algoritmer og datastrukturer/AlgDatØvinger/ferdigtest.txt");
     File compressed = new File("ferdigtest.txt");
     //huff.huffmannDecompression(compressed, "C:\\Users\\haava\\OneDrive\\Dokumenter\\Progging\\Øvinger\\AlgDatØvinger\\dekomprimert.txt");
-
->>>>>>> 9f65a6d4009ac0af058a6843b78fcb67efdc9e1d
-  }
-
+ }
 }

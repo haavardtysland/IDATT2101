@@ -1,4 +1,4 @@
-//package Oblig7;
+package Oblig7;
 
 import java.io.File;
 import java.io.IOException;

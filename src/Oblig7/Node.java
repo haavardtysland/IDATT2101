@@ -1,4 +1,4 @@
-//package Oblig7;
+package Oblig7;
 
 public class Node {
 

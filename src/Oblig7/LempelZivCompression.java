@@ -1,4 +1,4 @@
-//package Oblig7;
+package Oblig7;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
